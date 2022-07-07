@@ -169,3 +169,38 @@ func UploadDocument(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode("Nothing happened")
 	}
 }
+
+func DeleteLoan(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	if LoginUser.Username == "" {
+		json.NewEncoder(w).Encode("Please login first")
+	} else if !LoginUser.Admin {
+		json.NewEncoder(w).Encode("access denied")
+	} else if r.Method == http.MethodDelete {
+		var deletionStatus ent.DeletionLoan
+		//parsing query string
+		attachmentID := r.URL.Query().Get("id")
+
+		//delete all documents that attached
+		result := db.Where("attachment_id = ?", attachmentID).Delete(&ent.Document{})
+		if result.Error == nil && result.RowsAffected > 0 {
+			deletionStatus.Documents = true
+		}
+
+		//delete loan application
+		result = db.Where("loan_id = ?", attachmentID).Delete(&ent.LoanApplication{})
+		if result.Error == nil && result.RowsAffected > 0 {
+			deletionStatus.LoanApplication = true
+		}
+
+		//delete loan
+		result = db.Where("lan = ?", attachmentID).Delete(&ent.Loan{})
+		if result.Error == nil && result.RowsAffected > 0 {
+			deletionStatus.Loan = true
+		}
+
+		json.NewEncoder(w).Encode(deletionStatus)
+	} else {
+		json.NewEncoder(w).Encode("Nothing happened")
+	}
+}
