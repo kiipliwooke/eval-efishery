@@ -1,7 +1,7 @@
 package entity
 
 type Account struct {
-	username string ``
+	username string `gorm:"primaryKey"`
 	password string ``
 	admin    bool   ``
 }

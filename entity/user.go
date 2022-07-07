@@ -1,7 +1,7 @@
 package entity
 
 type User struct {
-	userID    string ``
+	userID    string `gorm:"primaryKey;autoIncrement"`
 	fullName  string ``
 	birthDate string ``
 	email     string ``

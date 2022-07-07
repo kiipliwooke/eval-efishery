@@ -1,7 +1,7 @@
 package entity
 
 type Loan struct {
-	lan      string  ``
+	lan      string  `gorm:"primaryKey"`
 	value    int     ``
 	category string  ``
 	interest float64 ``
