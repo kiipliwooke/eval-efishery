@@ -206,3 +206,88 @@ func DeleteLoan(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode("Nothing happened")
 	}
 }
+
+func Approve(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/json")
+	if LoginUser.Username == "" {
+		json.NewEncoder(w).Encode("Please login first")
+	} else if r.Method == http.MethodPut {
+		var newLoanApplication ent.LoanApplication
+		//parsing query string
+		newLoanApplication.LoanID = r.URL.Query().Get("id")
+
+		//get the loan application
+		db.Model(&ent.LoanApplication{}).Where("loan_id = ?", newLoanApplication.LoanID).Find(&newLoanApplication)
+		if newLoanApplication.UserID <= 0 {
+			json.NewEncoder(w).Encode("error on query")
+			return
+		}
+
+		//admin
+		var provable bool
+		if LoginUser.Admin {
+			//condition
+			if newLoanApplication.LoanerSign != "" {
+				provable = true
+			}
+
+			if provable {
+				//save file
+				result, filename := SaveFile(r)
+
+				if !result {
+					json.NewEncoder(w).Encode("error on processing file")
+				} else {
+					//update record
+					newLoanApplication.LenderSign = filename
+					err := db.Model(&ent.LoanApplication{}).Where("loan_id = ?", newLoanApplication.LoanID).Update("lender_sign", filename)
+					if err.Error != nil {
+						json.NewEncoder(w).Encode("error on updating")
+						return
+					} else {
+						json.NewEncoder(w).Encode(newLoanApplication)
+					}
+				}
+			} else {
+				json.NewEncoder(w).Encode("requirements not met")
+			}
+
+		} else { //common user
+			//get status loan
+			var status string
+			db.Model(&ent.Loan{}).Select("status").Where("lan = ?", newLoanApplication.LoanID).Find(&status)
+
+			//get userID
+			var userID int
+			db.Model(&ent.User{}).Select("user_id").Where("username = ?", LoginUser.Username).Find(&userID)
+
+			//condition
+			if status == "Approved" && userID == newLoanApplication.UserID {
+				provable = true
+			}
+
+			if provable {
+				//save file
+				result, filename := SaveFile(r)
+
+				if !result {
+					json.NewEncoder(w).Encode("error on processing file")
+				} else {
+					//update record
+					newLoanApplication.LoanerSign = filename
+					err := db.Model(&ent.LoanApplication{}).Where("loan_id = ?", newLoanApplication.LoanID).Update("loaner_sign", filename)
+					if err.Error != nil {
+						json.NewEncoder(w).Encode("error on updating")
+						return
+					} else {
+						json.NewEncoder(w).Encode(newLoanApplication)
+					}
+				}
+			} else {
+				json.NewEncoder(w).Encode("requirements not met")
+			}
+		}
+	} else {
+		json.NewEncoder(w).Encode("Nothing happened")
+	}
+}

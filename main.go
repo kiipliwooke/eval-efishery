@@ -41,6 +41,7 @@ func main() {
 	mux.HandleFunc("/loan", GetLoan)
 	mux.HandleFunc("/uploadDocument", UploadDocument)
 	mux.HandleFunc("/deleteLoan", DeleteLoan)
+	mux.HandleFunc("/approve", Approve)
 
 	http.ListenAndServe(":3000", mux)
 }
