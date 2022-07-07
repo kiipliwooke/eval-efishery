@@ -8,3 +8,8 @@ type Loan struct {
 	Interest float64 ``
 	DueDate  string  ``
 }
+
+type DetailedLoan struct {
+	Loan      Loan
+	Documents []Document
+}

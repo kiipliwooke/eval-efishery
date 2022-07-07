@@ -2,7 +2,6 @@ package main
 
 import (
 	ent "eval-efishery/entity"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -16,6 +15,7 @@ var err error
 var db *gorm.DB
 
 func main() {
+	//get env file
 	err = godotenv.Load()
 	DB_URI := os.Getenv("DB_URI")
 	db, err = gorm.Open(postgres.Open(DB_URI), &gorm.Config{})
@@ -34,9 +34,11 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	//list of all handlers
 	mux.HandleFunc("/login", Login)
 	mux.HandleFunc("/logout", Logout)
+	mux.HandleFunc("/allLoan", GetAllLoans)
+	mux.HandleFunc("/loan", GetLoan)
 
 	http.ListenAndServe(":3000", mux)
-	fmt.Println("Hello, World!")
 }
