@@ -1,12 +1,12 @@
 package entity
 
 type Account struct {
-	username string `gorm:"primaryKey"`
-	password string ``
-	admin    bool   ``
+	Username string `json:"username" gorm:"primaryKey"`
+	Password string ``
+	Admin    bool   ``
 }
 
 type UserLogin struct {
-	username string ``
-	admin    bool   ``
+	Username string ``
+	Admin    bool   ``
 }

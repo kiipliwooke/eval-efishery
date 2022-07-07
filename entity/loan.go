@@ -1,9 +1,10 @@
 package entity
 
 type Loan struct {
-	lan      string  `gorm:"primaryKey"`
-	value    int     ``
-	category string  ``
-	interest float64 ``
-	dueDate  string  ``
+	Lan      string  `gorm:"primaryKey"`
+	Value    int     ``
+	Category string  ``
+	Status   string  ``
+	Interest float64 ``
+	DueDate  string  ``
 }

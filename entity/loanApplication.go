@@ -1,9 +1,9 @@
 package entity
 
 type LoanApplication struct {
-	userID     int    ``
-	loanID     string ``
-	date       string ``
-	loanerSign string ``
-	lenderSign string ``
+	UserID     int    ``
+	LoanID     string ``
+	Date       string ``
+	LoanerSign string ``
+	LenderSign string ``
 }

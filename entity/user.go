@@ -1,10 +1,10 @@
 package entity
 
 type User struct {
-	userID    string `gorm:"primaryKey;autoIncrement"`
-	fullName  string ``
-	birthDate string ``
-	email     string ``
-	phone     string ``
-	username  string ``
+	UserID    int    `gorm:"primaryKey;autoIncrement"`
+	FullName  string ``
+	BirthDate string ``
+	Email     string ``
+	Phone     string ``
+	Username  string ``
 }
