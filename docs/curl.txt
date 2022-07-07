@@ -1,0 +1,16 @@
+##HARAP DIPERHATIKAN##
+testing ini menggunakan data dummy yang digenerate otomatis
+harap mengganti "file=@path" dengan path file yang ingin diupload
+
+curl -i http://localhost:3000/logout
+curl -i -X POST -d "{\"username\":\"kiipliwooke\", \"password\":\"123\"}" "http://localhost:3000/login"
+curl -i -X POST -d "{\"username\":\"iyvlin\", \"password\":\"456\"}" "http://localhost:3000/login"
+curl -i -X POST -d "{\"username\":\"phrye\", \"password\":\"iyvlinimut\"}" "http://localhost:3000/login"
+curl -i "http://localhost:3000/allLoan"
+curl -i "http://localhost:3000/loan?lan=e3da5436-fdb6-11ec-b939-0242ac120002"
+curl -i "http://localhost:3000/loan?lan=e3da5634-fdb6-11ec-b939-0242ac120002"
+curl -i "http://localhost:3000/loan?lan=e3da5756-fdb6-11ec-b939-0242ac120002"
+curl -i -X POST -F file=@./oprec.jpg "http://localhost:3000/uploadDocument?category=STNK&attachment=e3da5436-fdb6-11ec-b939-0242ac120002"
+curl -i -X DELETE "http://localhost:3000/deleteLoan?id=e3da5436-fdb6-11ec-b939-0242ac120002"
+curl -i -X PUT -F file=@./oprec.jpg "http://localhost:3000/approve?id=e3da5634-fdb6-11ec-b939-0242ac120002"
+curl -i -X PUT -F file=@./oprec.jpg "http://localhost:3000/approve?id=e3da5756-fdb6-11ec-b939-0242ac120002"
