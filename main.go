@@ -3,6 +3,7 @@ package main
 import (
 	ent "eval-efishery/entity"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -24,8 +25,18 @@ func main() {
 	//migrate all struct
 	db.AutoMigrate(&ent.Account{}, &ent.Document{}, &ent.Loan{}, &ent.LoanApplication{}, &ent.User{})
 
-	//creating dummy
-	DummyGenerator()
+	//creating dummy if haven't
+	var first ent.Account
+	result := db.First(&first)
+	if result.RowsAffected <= 0 {
+		DummyGenerator()
+	}
 
+	mux := http.NewServeMux()
+
+	mux.HandleFunc("/login", Login)
+	mux.HandleFunc("/logout", Logout)
+
+	http.ListenAndServe(":3000", mux)
 	fmt.Println("Hello, World!")
 }

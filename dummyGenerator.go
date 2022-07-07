@@ -86,6 +86,11 @@ func DummyGenerator() {
 			LoanID: "e3da5634-fdb6-11ec-b939-0242ac120002",
 			Date:   "2022-07-03",
 		},
+		{
+			UserID: 2,
+			LoanID: "e3da5756-fdb6-11ec-b939-0242ac120002",
+			Date:   "2022-05-28",
+		},
 	}
 	var users = []ent.User{
 		{

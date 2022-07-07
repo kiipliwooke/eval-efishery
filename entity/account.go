@@ -2,8 +2,8 @@ package entity
 
 type Account struct {
 	Username string `json:"username" gorm:"primaryKey"`
-	Password string ``
-	Admin    bool   ``
+	Password string `json:"password"`
+	Admin    bool   `json:"admin"`
 }
 
 type UserLogin struct {
