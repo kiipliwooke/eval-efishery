@@ -1,8 +1,8 @@
 # eval-efishery
-Repository ini dibuat untuk memenuhi evaluasi eFishery Aqua-Developer Batch 1
-Algoritma yang dipilih yaitu Palindrome dengan source code pada algorithm/
-ERD berada pada docs/
-Terdapat daftar test menggunakan curl pada docs/
+Repository ini dibuat untuk memenuhi evaluasi eFishery Aqua-Developer Batch 1  
+Algoritma yang dipilih yaitu Palindrome dengan source code pada algorithm/  
+ERD berada pada docs/  
+Terdapat daftar test menggunakan curl pada docs/  
 
 ## Asumsi
 * status verifikasi dokumen telah dilakukan pada proses sebelumnya
