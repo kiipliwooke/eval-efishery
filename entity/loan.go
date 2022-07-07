@@ -10,6 +10,8 @@ type Loan struct {
 }
 
 type DetailedLoan struct {
-	Loan      Loan
-	Documents []Document
+	LoanerSign string
+	LenderSign string
+	Loan       Loan
+	Documents  []Document
 }

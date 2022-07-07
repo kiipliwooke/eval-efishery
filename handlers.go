@@ -72,6 +72,7 @@ func GetLoan(w http.ResponseWriter, r *http.Request) {
 
 		var accessable = true
 		//checking not admin
+		var detailedLoan ent.DetailedLoan
 		if !LoginUser.Admin {
 			//find userID
 			var userID int
@@ -85,9 +86,10 @@ func GetLoan(w http.ResponseWriter, r *http.Request) {
 			if result.RowsAffected <= 0 {
 				accessable = false
 			}
+			detailedLoan.LenderSign = laTmp.LenderSign
+			detailedLoan.LoanerSign = laTmp.LoanerSign
 		}
 		if accessable {
-			var detailedLoan ent.DetailedLoan
 			//finding loan
 			result := db.Model(&ent.Loan{}).Where("lan = ?", loanID).Find(&detailedLoan.Loan)
 			if result.RowsAffected <= 0 {
