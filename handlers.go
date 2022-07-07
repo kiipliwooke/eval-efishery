@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	ent "eval-efishery/entity"
+	"io"
 	"net/http"
+	"os"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -99,6 +101,70 @@ func GetLoan(w http.ResponseWriter, r *http.Request) {
 		} else {
 			json.NewEncoder(w).Encode("Access disabled")
 		}
+	} else {
+		json.NewEncoder(w).Encode("Nothing happened")
+	}
+}
+
+func UploadDocument(w http.ResponseWriter, r *http.Request) {
+	if LoginUser.Username == "" {
+		json.NewEncoder(w).Encode("Please login first")
+	} else if r.Method == http.MethodPost {
+		var newDocument ent.Document
+		//parsing query string
+		newDocument.Category = r.URL.Query().Get("category")
+		newDocument.AttachmentID = r.URL.Query().Get("attachment")
+
+		//find userID
+		var userID int
+		//asume there is one userID
+		db.Model(&ent.User{}).Select("user_id").Where("username = ?", LoginUser.Username).Find(&userID)
+
+		//find combination userID and loanID
+		var laTmp ent.LoanApplication
+		result := db.Model(&ent.LoanApplication{}).Where("user_id = ? AND loan_id = ?", userID, newDocument.AttachmentID).Find(&laTmp)
+		//handling
+		if result.RowsAffected <= 0 {
+			json.NewEncoder(w).Encode("access denied")
+			return
+		}
+
+		//get file
+		file, header, errFile := r.FormFile("file")
+		if errFile != nil {
+			json.NewEncoder(w).Encode("Error on processing file")
+			return
+		}
+		//gatau ngapain
+		defer file.Close()
+
+		//making directory
+		filename := header.Filename
+		newDocument.FileName = filename
+		var f *os.File
+		f, errFile = os.OpenFile("./static/document/"+filename, os.O_WRONLY|os.O_CREATE, 0666)
+		if errFile != nil {
+			json.NewEncoder(w).Encode("Error on making file")
+			return
+		}
+		defer f.Close()
+		//copying file
+		io.Copy(f, file)
+
+		//create new record
+		result = db.Create(&newDocument)
+		if result.Error != nil {
+			json.NewEncoder(w).Encode("error on inserting data")
+			return
+		}
+
+		//change status of the loan to review
+		result = db.Model(&ent.Loan{}).Where("lan = ?", newDocument.AttachmentID).Update("status", "Review")
+		if result.Error != nil {
+			json.NewEncoder(w).Encode("error on inserting data")
+			return
+		}
+		json.NewEncoder(w).Encode(newDocument)
 	} else {
 		json.NewEncoder(w).Encode("Nothing happened")
 	}
