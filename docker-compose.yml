@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: "database"
+    ports: 
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER= postgres
+      - POSTGRES_PASSWORD= efishery
+      - POSTGRES_DB= loan-approval
+    networks:
+      - fullstack
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+  api:
+    build: .
+    container_name: "loan-approval"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - fullstack
+
+volumes:
+  database_postgres:
+
+networks:
+  fullstack:
+    driver: bridge
