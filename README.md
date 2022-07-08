@@ -31,3 +31,5 @@ Terdapat daftar test menggunakan curl pada docs/
 * besar file tidak ada batas
 * cascade saat delete (sekarang manual)
 * tidak ada hashing password
+
+## Tidak berhasil membuat docker
